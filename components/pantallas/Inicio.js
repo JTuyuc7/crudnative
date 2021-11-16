@@ -3,6 +3,7 @@ import { SafeAreaView, Text, View, FlatList, StyleSheet, Dimensions } from 'reac
 import { List, Headline, Button, FAB } from 'react-native-paper';
 import globalStyles from '../../styles/Global';
 import axios from 'axios';
+import DetallesCliente from './DetallesCliente';
 
 const { height } = Dimensions.get('screen');
 
@@ -28,7 +29,11 @@ const Inicio = ({navigation, route}) => {
         if( consultar ){
             obtenerData()
         }
-    }, [consultar])
+    }, [consultar]);
+
+    const detallesCliente = (item) => {
+        navigation.navigate('DetallesCliente', { item, guardarConsultar } )
+    }
 
     return (  
         <>
@@ -50,6 +55,7 @@ const Inicio = ({navigation, route}) => {
                             <List.Item
                                 title={ item.nombre }
                                 description={ item.empresa }
+                                onPress={ () => detallesCliente(item)}
                             />
                         )}
                         keyExtractor={ user => (user.id).toString() }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, Alert } from 'react-native';
 import { TextInput, Headline, Button, Paragraph, Dialog, Portal, Provider } from 'react-native-paper';
 import axios from 'axios';
@@ -15,7 +15,18 @@ const NuevoCliente = ({ navigation, route }) => {
     const [ telefono, setTelefono ] = useState('');
     const [ correo, setCorreo ] = useState('');
     const [ empresa, setEmpresa ] = useState('');
-    const [ error, setError ] = useState(false)
+    const [ error, setError ] = useState(false);
+
+    //Detect if the user is editing or adding a new one
+    useEffect(() => {
+        if(route?.params?.cliente){
+            const { nombre, telefono, correo, empresa } = route?.params?.cliente;
+            setNombre(nombre);
+            setTelefono(telefono);
+            setCorreo(correo);
+            setEmpresa(empresa);
+        }
+    }, [])
 
     const agregarDatos = async () => {
 
@@ -28,31 +39,42 @@ const NuevoCliente = ({ navigation, route }) => {
 
         const usuario = { nombre, telefono, correo, empresa }
 
-        // Agregar a la API el nuevo usuario
-        try {
-            // para Android
-            await axios.post('http://10.0.2.2:3000/clientes', usuario );
+        if(route?.params?.cliente){
 
-            // Para IOS
-            // await axios.post('http://localhost:3000/clieten', usuario)
+            const { id } = route?.params?.cliente;
+            usuario.id = id;
+            try{
+                await axios.put(`http://10.0.2.2:3000/clientes/${id}`, usuario)
+                // Refresh to bring the new data from the API
+                
+                
+            }catch (error){
+                console.log(error, 'Unable to updte the user')
+            }
+        }else{
+                // Agregar a la API el nuevo usuario
+            try {
+                // para Android
+                await axios.post('http://10.0.2.2:3000/clientes', usuario );
+                // Para IOS
+                // await axios.post('http://localhost:3000/clieten', usuario)
 
-            // IF user saves correctly redirect to the main page 
-            navigation.navigate('Inicio')
-
-            
-
-        } catch (error) {
-            console.log(error, 'Unable to save user')
+            } catch (error) {
+                console.log(error, 'Unable to save user')
+            }
         }
+
+        // IF user saves correctly redirect to the main page 
+        navigation.navigate('Inicio')
+
+        guardarConsultar(true)
 
         // resetear el form
         setNombre('');
         setTelefono('');
         setCorreo('');
         setEmpresa('');
-
-        // Refresh to bring the new data from the API
-        guardarConsultar(true)
+        
     }
 
     return (  
@@ -61,7 +83,7 @@ const NuevoCliente = ({ navigation, route }) => {
                 <View style={ globalStyles.contenedor}>
                     <Headline
                         style={ globalStyles.titulo }
-                    >Agregar Nuevo Cliente</Headline>
+                    >{ route?.params?.cliente ? 'Editar' : 'Agregar Nuevo Cliente'}</Headline>
 
                     <TextInput
                         label="Nombre"

@@ -64,6 +64,7 @@ const App = () => {
             <Stack.Screen
               name='DetallesCliente'
               component={ DetallesCliente }
+              options={{ title: 'Detalles Cliente '}}
             />
           </Stack.Navigator>
         </NavigationContainer>
