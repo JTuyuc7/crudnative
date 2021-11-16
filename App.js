@@ -32,39 +32,42 @@ const theme = {
 const App = () => {
   return (  
     <>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName='Inicio'
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: theme.colors.primary
-            },
-            headerTintColor: theme.colors.surface,
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              fontWeight: 'bold'
-            }
-          }}
-        >
-          <Stack.Screen
-            name='Inicio'
-            component={ Inicio }
-            options={({ navigation, route }) => ({
-              headerLeft: (props) => <Barra { ...props } navigation={navigation} route={route} />
-            })}
-          />
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName='Inicio'
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: theme.colors.primary
+              },
+              headerTintColor: theme.colors.surface,
+              headerTitleAlign: 'center',
+              headerTitleStyle: {
+                fontWeight: 'bold'
+              }
+            }}
+          >
+            <Stack.Screen
+              name='Inicio'
+              component={ Inicio }
+              options={({ navigation, route }) => ({
+                //headerLeft: (props) => <Barra { ...props } navigation={navigation} route={route} />
+              })}
+            />
 
-          <Stack.Screen
-            name='NuevoCliente'
-            component={NuevoCliente}
-          />
+            <Stack.Screen
+              name='NuevoCliente'
+              component={NuevoCliente}
+              options={{ title: 'Nuevo Cliente'}}
+            />
 
-          <Stack.Screen
-            name='DetallesCliente'
-            component={ DetallesCliente }
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen
+              name='DetallesCliente'
+              component={ DetallesCliente }
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
     </>
   );
 }
